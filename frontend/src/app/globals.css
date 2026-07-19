@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0f172a; /* Slate 900 */
+  --foreground: #f8fafc; /* Slate 50 */
+  
+  --card-bg: rgba(30, 41, 59, 0.7); /* Slate 800 with 0.7 opacity */
+  --card-border: rgba(51, 65, 85, 0.5); /* Slate 700 with 0.5 opacity */
+  
+  --accent-blue: #38bdf8; /* Sky 400 */
+  --accent-green: #34d399; /* Emerald 400 */
+  --accent-red: #f87171; /* Red 400 */
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism custom classes */
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 12px 40px 0 rgba(56, 189, 248, 0.15);
+}
+
+/* Glowing real-time dot animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px 4px rgba(52, 211, 153, 0.5);
+  }
+}
+
+.glow-green {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Custom Scrollbar for modern feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Dialog (Modal) Animation with @starting-style (Baseline 2024) */
+dialog {
+  opacity: 0;
+  transform: translateY(24px) scale(0.95);
+  transition: 
+    opacity 0.25s ease-out, 
+    transform 0.25s ease-out, 
+    display 0.25s allow-discrete, 
+    overlay 0.25s allow-discrete;
+}
+
+dialog[open] {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+
+  @starting-style {
+    opacity: 0;
+    transform: translateY(24px) scale(0.95);
+  }
+}
+
+dialog::backdrop {
+  background-color: rgba(15, 23, 42, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: 
+    background-color 0.25s ease-out, 
+    backdrop-filter 0.25s ease-out, 
+    display 0.25s allow-discrete, 
+    overlay 0.25s allow-discrete;
+}
+
+dialog[open]::backdrop {
+  background-color: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  @starting-style {
+    background-color: rgba(15, 23, 42, 0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+}
+
+/* Custom dialog sizing */
+dialog {
+  max-height: 90vh;
+}

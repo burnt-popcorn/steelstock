@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Database Service (PostgreSQL)
+  db:
+    image: postgres:15-alpine
+    container_name: steelsync-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: steelsync
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Backend API Server & Socket.IO WebSockets
+  backend:
+    build: ./backend
+    container_name: steelsync-backend
+    restart: always
+    ports:
+      - "5001:5001"
+    environment:
+      - PORT=5001
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/steelsync?schema=public
+      - NODE_ENV=production
+    depends_on:
+      - db
+
+  # Frontend Next.js Client
+  frontend:
+    build: ./frontend
+    container_name: steelsync-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+    driver: local

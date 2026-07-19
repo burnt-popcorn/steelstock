@@ -1,0 +1,40 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model InventoryItem {
+  id            String             @id @default(uuid())
+  name          String             // e.g., TMT Rebars 12mm, MS Channel 100x50
+  category      String             // e.g., Rebars, Channels, Angles, Coils, Plates
+  grade         String             // e.g., Fe 500, Fe 550D, IS 2062
+  sectionSize   String             // e.g., 12mm, 100x50mm, 8mm
+  totalTons     Float              // Current stock in Metric Tonnes
+  totalPieces   Int                // Current stock in Pieces / Bundles
+  unitWeight    Float              // Calculated or standard weight per piece (Tons)
+  minStockLimit Float              // Reorder threshold (Tons)
+  location      String             // Yard A, Yard B, Production Area, Dispatch
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  transactions  StockTransaction[]
+}
+
+model StockTransaction {
+  id             String        @id @default(uuid())
+  itemId         String
+  item           InventoryItem @relation(fields: [itemId], references: [id])
+  type           String        // "INWARD" (Add) or "OUTWARD" (Remove/Dispatch)
+  tons           Float         // Weight moved
+  pieces         Int           // Pieces moved
+  invoiceNumber  String?       // Outward details
+  gatePassNumber String?       // Inward/Outward gate control details
+  partyName      String?       // Vendor (Inward) or Customer (Outward)
+  vehicleNumber  String?       // Transport details
+  driverName     String?       
+  operatorName   String        // Employee logging the transaction
+  createdAt      DateTime      @default(now())
+}
