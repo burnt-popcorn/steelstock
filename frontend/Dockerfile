@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:20-alpine as builder
 
 # Set working directory
 WORKDIR /app
@@ -15,8 +15,19 @@ COPY . .
 # Run production build
 RUN npm run build
 
-# Expose Next.js port
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install serve to run static exports
+RUN npm install -g serve
+
+# Copy built static files from builder
+COPY --from=builder /app/out ./out
+
+# Expose port
 EXPOSE 3000
 
-# Start production server
-CMD ["npm", "start"]
+# Serve static files
+CMD ["serve", "-s", "out", "-l", "3000"]
