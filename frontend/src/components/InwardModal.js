@@ -1,9 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { X, Plus, AlertCircle } from 'lucide-react';
 
-const BACKEND_URL = typeof window !== 'undefined' 
-  ? `${window.location.protocol}//${window.location.hostname}${window.location.port && window.location.port !== '80' && window.location.port !== '443' ? `:${window.location.port === '3000' ? '5001' : window.location.port}` : ''}` 
-  : 'http://localhost:5001';
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 export default function InwardModal({ isOpen, onClose, inventoryItems, onSubmitSuccess }) {
   const dialogRef = useRef(null);
